@@ -1,29 +1,24 @@
-import './utils/system.copyright'
-import ElementPlus from 'element-plus'
-import App from './App.vue'
-import pinia from './store'
-import router from './router'
-import useSettingsStore from './store/modules/settings'
+import { createApp } from "vue";
+import { createPinia } from 'pinia'
+import App from "./App.vue";
+import router from './router';
 
-// 自定义指令
-import directive from '@/utils/directive'
+// import "~/styles/element/index.scss";
 
-// 加载 svg 图标
-import 'virtual:svg-icons-register'
+import ElementPlus from "element-plus";
+// import all element css, uncommented next line
+import "element-plus/dist/index.css";
 
-// 全局样式
-import '@/assets/styles/globals.scss'
+// or use cdn, uncomment cdn link in `index.html`
 
-// 加载 iconify 图标（element plus）
-import { downloadAndInstall } from '@/iconify-ep'
+import "~/styles/index.scss";
+import "uno.css";
 
-const app = createApp(App)
-app.use(ElementPlus)
-app.use(pinia)
+// If you want to use ElMessage, import it.
+import "element-plus/theme-chalk/src/message.scss";
+
+const app = createApp(App);
+app.use(ElementPlus);
+app.use(createPinia())
 app.use(router)
-directive(app)
-if (useSettingsStore().settings.app.iconifyOfflineUse) {
-  downloadAndInstall()
-}
-
-app.mount('#app')
+app.mount("#app");
