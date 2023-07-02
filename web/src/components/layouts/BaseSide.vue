@@ -21,25 +21,25 @@
 
             <el-sub-menu index="2">
               <template #title>
-                <el-icon><icon-menu /></el-icon><span>权限管理</span>
+                <el-icon><icon-menu /></el-icon><span>Game Center</span>
               </template>
               <el-menu-item-group>
                 <template #title>Group 1</template>
-                <el-menu-item index="/auth/none"><span>暂无</span></el-menu-item>
-                <el-menu-item index="/auth/other"><span>其他</span></el-menu-item>
+                <el-menu-item index="/auth/none"><span>KOB</span></el-menu-item>
+                <el-menu-item index="/auth/other"><span>扫雷</span></el-menu-item>
               </el-menu-item-group>
               <el-menu-item-group title="Group 2">
-                <el-menu-item index="/user"><span>order1</span></el-menu-item>
+                <el-menu-item index="/user"><span>贪吃蛇</span></el-menu-item>
               </el-menu-item-group>
               <el-sub-menu index="2-4">
                 <template #title>无</template>
-                <el-menu-item index="file"><span>oder2</span></el-menu-item>
+                <el-menu-item index="file"><span>其他</span></el-menu-item>
               </el-sub-menu>
             </el-sub-menu>
 
             <el-sub-menu index="3">
               <template #title>
-                <el-icon><setting /></el-icon><span>Navigator Three</span>
+                <el-icon><setting /></el-icon><span>联系我</span>
               </template>
               <el-menu-item-group>
                 <template #title>Group 1</template>

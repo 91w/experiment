@@ -19,8 +19,9 @@ public class GetInfoServiceImpl implements GetInfoService {
         Map<String, String> map = new HashMap<>();
         map.put("msg", "success");
         map.put("id", loginUser.getId().toString());
-        map.put("username", loginUser.getUsername());
         map.put("email", loginUser.getEmail());
+        map.put("slogan", loginUser.getSlogan());
+        map.put("username", loginUser.getUsername());
         map.put("profile", loginUser.getProfile());
         return map;
 

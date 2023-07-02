@@ -48,6 +48,15 @@ public class JwtUtil {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token)) ? userDetails : null;
     }
 
+    public static boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(JWT_KEY).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     // 验证Token是否过期
     public static boolean isTokenExpired(String token) {
         return extractClaims(token).getExpiration().before(new Date());

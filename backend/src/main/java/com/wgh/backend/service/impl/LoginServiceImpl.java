@@ -34,9 +34,11 @@ public class LoginServiceImpl implements LoginService {
         // token 是用用户名 生成
         String accessToken = JwtUtil.generateAccessToken(loginUser);
         String refreshToken = JwtUtil.generateRefreshToken(loginUser);
+        map.put("username", loginUser.getUsername());
         map.put("msg", "success");
-        map.put("access-token", accessToken);
-        map.put("refresh-token", refreshToken);
+        map.put("access_token", accessToken);
+        map.put("refresh_token", refreshToken);
+        map.put("profile", loginUser.getProfile());
         return map;
 
     }

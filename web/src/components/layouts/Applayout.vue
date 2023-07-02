@@ -5,9 +5,8 @@ import {RouterView}  from "vue-router";
 </script>
 
 
-
-
 <template>
+  <!--主界面-->
     <div class="common-layout">
       <el-container>
         <BaseSide></BaseSide>

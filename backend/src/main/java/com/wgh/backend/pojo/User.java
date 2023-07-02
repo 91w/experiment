@@ -22,7 +22,7 @@ public class User implements UserDetails {
     private String password;
     private String email;
     private String profile;
-    private Integer userAge;
+    private String slogan;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

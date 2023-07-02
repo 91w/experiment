@@ -12,14 +12,11 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import io.jsonwebtoken.Claims;
-//import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
@@ -43,7 +40,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 username = JwtUtil.extractUsername(token);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+
+                response.sendError(response.SC_UNAUTHORIZED, "401");
+                return;
             }
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("username", username);
