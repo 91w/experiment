@@ -9,7 +9,7 @@
 import axios from 'axios'
 
 // 请求图片签名
-const UploadAvatar = fileName =>
-  axios.post('/api/v1/avatar', { filename: fileName }).then(res => res.data)
+const UploadForm = form =>
+  axios.post('/api/sale', form).then(res => res.data)
 
-export { UploadAvatar }
+export { UploadForm }

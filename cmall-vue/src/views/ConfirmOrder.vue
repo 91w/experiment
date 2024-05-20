@@ -23,7 +23,7 @@
           <div class="cart-header-select">
             <el-dropdown>
               <router-link to class="href">
-                <span style="margin-right:5px">{{this.$store.getters.getUser.nickname}}</span>
+                <span style="margin-right:5px">{{this.$store.getters.getUser.username}}</span>
                 <i class="el-icon-caret-bottom"></i>
               </router-link>
               <el-dropdown-menu slot="dropdown">
@@ -86,12 +86,12 @@
         <div class="goods-list">
           <ul>
             <li v-for="item in getCheckGoods" :key="item.id">
-              <img :src="item.img_path" />
-              <span class="pro-name">{{item.name}}</span>
-              <span class="pro-price">{{item.discount_price}}元</span>
-              <span class="pro-num">x {{item.num}}</span>
+              <img :src="'data:image/jpeg;base64,' + item.mainimg" alt />
+              <span class="pro-name">{{item.commname}}</span>
+              <span class="pro-price">{{item.thinkmoney}}元</span>
+              <!-- <span class="pro-num">x {{item.num}}</span> -->
               <span class="pro-status"></span>
-              <span class="pro-total">{{item.discount_price * item.num}}元</span>
+              <span class="pro-total">{{item.thinkmoney}}元</span>
             </li>
           </ul>
         </div>
@@ -186,6 +186,7 @@ import { mapActions } from 'vuex'
 import * as addressesAPI from '@/api/addresses'
 import * as ordersAPI from '@/api/orders'
 import * as cartsAPI from '@/api/carts'
+import user from '../store/modules/user'
 export default {
   name: '',
   data() {
@@ -195,8 +196,9 @@ export default {
       // 地址列表
       address: [],
       addVisible: false,
+      user: JSON.parse(localStorage.getItem('user')),
       form: {
-        user_id: '',
+        user_id: user.id,
         name: '',
         phone: '',
         address: ''
@@ -224,14 +226,7 @@ export default {
       addressesAPI
         .showAddresses(this.$store.getters.getUser.id)
         .then(res => {
-          if (res.status === 200) {
             this.address = res.data
-          } else if (res.status === 20001) {
-            //token过期，需要重新登录
-            this.loginExpired(res.msg)
-          } else {
-            this.notifyError('获取收货地址失败', res.msg)
-          }
         })
         .catch(err => {
           this.notifyError('获取收货地址失败', err)
@@ -246,8 +241,8 @@ export default {
       for (let i = 0; i < orders.length; i++) {
         var form = {
           user_id: this.$store.getters.getUser.id,
-          product_id: orders[i].product_id,
-          num: orders[i].num,
+          product_id: orders[i].commid,
+          // num: orders[i].num,
           address_id: this.confirmAddress
         }
         ordersAPI
@@ -263,13 +258,10 @@ export default {
               cartsAPI
                 .deleteCart(form1)
                 .then(res => {
-                  if (res.status === 200) {
+                  if (res.msg === '成功') {
                     // 更新vuex状态
                     this.deleteShoppingCart(temp.product_id)
-                  } else if (res.status === 20001) {
-                    //token过期，需要重新登录
-                    this.loginExpired(res.msg)
-                  } else {
+                  } else  {
                     this.notifyError('购物车删除失败', res.msg)
                   }
                 })
@@ -279,10 +271,8 @@ export default {
               // 跳转我的订单页面
               this.$router.push({ path: '/order' })
               this.notifySucceed('未付款的订单将于15分钟后删除')
-            } else if (res.status === 20001) {
-              //token过期，需要重新登录
-              this.loginExpired(res.msg)
-            } else {
+            } 
+             else {
               this.notifyError('结算失败', res.msg)
             }
           })
@@ -296,16 +286,11 @@ export default {
       addressesAPI
         .postAddress(this.form)
         .then(res => {
-          if (res.status === 200) {
+          if (res.msg === '成功') {
             this.address = res.data
             this.addVisible = false
             this.notifySucceed('新建收货地址成功')
-          } else if (res.status === 20001) {
-            //token过期，需要重新登录
-            this.loginExpired(res.msg)
-          } else {
-            this.notifyError('新建收货地址失败', res.msg)
-          }
+          } 
         })
         .catch(err => {
           this.notifyError('新建收货地址失败', err)

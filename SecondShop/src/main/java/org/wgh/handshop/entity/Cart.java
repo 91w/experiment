@@ -18,10 +18,11 @@ public class Cart {
     private Integer id;
     private Integer userid;
     private Integer commid;
-    private int check; // 是否选择，默认都为0
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
     private Date createtime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
     private Date modifytime;
+
+    private int status; // 是否选择，默认都为0
 }

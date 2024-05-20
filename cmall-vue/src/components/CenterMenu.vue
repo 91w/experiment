@@ -57,7 +57,9 @@
 export default {
   name: 'CenterMenu',
   data() {
-    return {}
+    return {
+      user: JSON.parse(localStorage.getItem('user'))
+    }
   },
   methods: {}
 }

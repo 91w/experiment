@@ -7,6 +7,7 @@ import axios from 'axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import VueLazyload from 'vue-lazyload'
+import * as  echarts from 'echarts'
 
 Vue.use(VueLazyload, {
   preLoad: 1.3,
@@ -31,6 +32,7 @@ Vue.prototype.axios = axios
 
 // 绑定到原型
 Vue.prototype.$initGeet = require('@/assets/gt.js')
+Vue.prototype.$echarts = echarts
 
 // 全局函数及变量
 import Global from './Global'
@@ -53,6 +55,22 @@ axios.interceptors.request.use(
     return Promise.reject(error)
   }
 )
+
+// 响应拦截器
+axios.interceptors.response.use(function (response) {
+  // 对响应数据做点什么
+  return response;
+}, function (error) {
+  // 对响应错误做点什么
+  if (error.response && error.response.status === 401) {
+      // 如果返回的状态码为401，说明token问题，可以直接跳转到登录页面，重新登录
+      router.push({
+        name: 'Login',
+      });
+  }
+  return Promise.reject(error);
+});
+
 //跳转页面时返回顶部
 router.afterEach((to, from, next) => {
   window.scrollTo(0, 0)
@@ -60,9 +78,20 @@ router.afterEach((to, from, next) => {
 
 // 全局拦截器,在进入需要用户权限的页面前校验是否已经登录
 router.beforeResolve((to, from, next) => {
-  const loginUser = store.state.user.user
+  // const loginUser = store.state.user.user
+  const loginUser = JSON.parse(localStorage.getItem('user'))
   // 判断路由是否设置相应校验用户权限
-  if (to.meta.requireAuth) {
+  if(to.meta.role && to.meta.requireAuth) {
+    console.log("admin登录")
+    if(!loginUser) {
+      console.log("admin登录1")
+      router.push({
+        name: 'Alogin'
+      })
+      return
+    }
+  }
+  if (to.meta.requireAuth ) {
     if (!loginUser) {
       // 没有登录，转到登录界面
       router.push({
@@ -80,6 +109,8 @@ router.beforeResolve((to, from, next) => {
   }
   next()
 })
+
+
 
 // 相对时间过滤器,把时间戳转换成时间
 // 格式: 2020-02-25 21:43:23

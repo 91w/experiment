@@ -17,6 +17,9 @@ const postUser = form =>
 //登录
 const postLogin = form =>
   axios.post('/api/user/login', form).then(res => res)
+
+const adminLogin = form =>
+  axios.post('/api/admin/login', form).then(res => res)
 //检验token
 const checkToken = () => axios.get('/api/ping').then(res => res.data)
 //修改信息
@@ -25,6 +28,10 @@ const updateUser = form => axios.put('/api/user', form).then(res => res.data)
 //发送邮件
 const sendEmail = form =>
   axios.post('/api/user/sending-email', form).then(res => res.data)
+
+// 修改密码
+const changePassword = form =>
+  axios.put('/api/user/changePass', form).then(res => res.data)
 
 //绑定或解绑邮箱
 const vaildEmail = val =>
@@ -39,5 +46,7 @@ export {
   updateUser,
   sendEmail,
   vaildEmail,
-  getCode
+  getCode,
+  adminLogin,
+  changePassword
 }

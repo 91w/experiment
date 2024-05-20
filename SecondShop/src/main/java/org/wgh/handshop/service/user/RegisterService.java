@@ -29,7 +29,6 @@ public class RegisterService {
         QueryWrapper<UserInfo> queryWrapper1 = new QueryWrapper();
         queryWrapper1.eq("mobilephone", phone);
         List<UserInfo> list1 = userMapper.selectList(queryWrapper1);
-        System.out.println(list1.toString());
         if(!list1.isEmpty()) {
             map.put("msg", "电话号已经被注册过啦");
             return map;

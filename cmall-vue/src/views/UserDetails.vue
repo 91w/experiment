@@ -36,9 +36,6 @@
                     <div class="el-upload__tip" slot="tip">点击上传头像,只能上传png/jpg文件，且不超过2M</div>
                   </el-upload>
                 </el-form-item>
-                <el-form-item prop="nickname" label="昵称:   ">
-                  <el-input v-model="form.nickname"></el-input>
-                </el-form-item>
                 <el-form-item prop="user_name" label="用户名:   ">
                   <el-input v-model="form.user_name"></el-input>
                 </el-form-item>
@@ -61,14 +58,6 @@ import * as userAPI from '@/api/users/'
 export default {
   name: 'Details',
   data() {
-    var validateNick = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入昵称'))
-      } else if (value.length < 2 || value.length > 10) {
-        callback(new Error('昵称长度需在2到10之间'))
-      }
-      callback()
-    }
     var validateUser = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入用户名'))
@@ -81,12 +70,12 @@ export default {
       imageUrl: '',
       form: {
         id: 0,
-        nickname: '',
+        // nickname: '',
         avatar: '',
         user_name: ''
       },
       rules: {
-        nickname: [{ validator: validateNick, trigger: 'blur' }],
+        // nickname: [{ validator: validateNick, trigger: 'blur' }],
         user_name: [{ validator: validateUser, trigger: 'blur' }]
       }
     }
@@ -116,9 +105,6 @@ export default {
               this.imageUrl = res.data.get
               this.form.avatar = res.data.key
             }
-          } else if (res.status === 20001) {
-            //token过期，需要重新登录
-            this.loginExpired(res.msg)
           } else {
             this.notifyError('上传失败', res.msg)
           }

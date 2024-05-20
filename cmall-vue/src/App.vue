@@ -21,19 +21,19 @@
             <li v-else class="header-user-con">
               <!-- 用户头像 -->
               <div class="user-avator">
-                <img :src="'data:image/jpeg;base64,' + this.$store.getters.getUser.uimage "/>
+                <img :src="'data:image/jpeg;base64,' + user.uimage "/>
               </div>
               <!-- 用户名下拉菜单 -->
               <div class="user-name">
                 <el-dropdown>
                   <span class="el-dropdown-link">
-                    {{this.$store.getters.getUser.username}}
+                    {{user.username}}
                     <i class="el-icon-caret-bottom"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
-                    <a href="https://github.com/congz666/cmall-go" target="_blank">
+                    <!-- <a href="https://github.com/congz666/cmall-go" target="_blank">
                       <el-dropdown-item>项目仓库</el-dropdown-item>
-                    </a>
+                    </a> -->
                     <router-link to="/center">
                       <el-dropdown-item>个人中心</el-dropdown-item>
                     </router-link>
@@ -83,9 +83,8 @@
           <el-menu-item index="/">首页</el-menu-item>
           <el-menu-item index="/goods">全部商品</el-menu-item>
           <el-menu-item index="/about">关于我们</el-menu-item>
-          <a href="https://congz666.gitee.io/" target="_blank">
-            <el-menu-item :index="0">个人博客</el-menu-item>
-          </a>
+          <el-menu-item index="/service">官方客服</el-menu-item>
+          <el-menu-item index="/upload">我要出售</el-menu-item>
           <div class="so">
             <el-input placeholder="请输入搜索内容" v-model="search">
               <el-button slot="append" icon="el-icon-search" @click="searchClick"></el-button>
@@ -105,7 +104,7 @@
       <!-- 主要区域容器END -->
 
       <!-- 底栏容器 -->
-      <el-footer>
+      <el-footer v-show="$route.meta.showFooter!==false">
         <div class="footer">
           <div class="ng-promise-box">
             <div class="ng-promise">
@@ -117,7 +116,7 @@
             </div>
           </div>
           <div class="github">
-            <a href="https://github.com/congz666/cmall-go" target="_blank">
+            <a href="https://github.com/91w/experiment" target="_blank">
               <div class="github-but"></div>
             </a>
           </div>
@@ -130,17 +129,17 @@
               <router-link to="/about">关于我们</router-link>
             </p>
             <p>
-              Copyright ©2020, congz.top 本网站设计内容大部分属小米商城
+              Copyright ©2024
               <iframe
                 style="margin-left: 2px; margin-bottom:-5px;"
                 frameborder="0"
                 scrolling="0"
                 width="91px"
                 height="20px"
-                src="https://ghbtns.com/github-btn.html?user=congz666&repo=cmall-go&type=star&count=true"
+                src="https://ghbtns.com/github-btn.html?user=91w&repo=experiment&type=star&count=true"
               ></iframe>
             </p>
-            <a href="http://www.beian.miit.gov.cn/" target="_blank">粤ICP备20067893号</a>
+            <a href="http://www.beian.miit.gov.cn/" target="_blank">晋ICP备20067893号</a>
           </div>
         </div>
       </el-footer>
@@ -162,7 +161,8 @@ export default {
   data() {
     return {
       activeIndex: '', // 头部导航栏选中的标签
-      search: '' // 搜索条件
+      search: '', // 搜索条件
+      user: JSON.parse(localStorage.getItem('user'))
     }
   },
   beforeCreate() {
@@ -172,7 +172,7 @@ export default {
     // 获取浏览器localStorage，判断用户是否已经登录
     userAPI.checkToken(localStorage.getItem('token')).then(res => {
       // 如果已经登录，设置vuex登录状态
-      if (res.status == 200) {
+      if (res.msg === '成功') {
         this.setUser(JSON.parse(localStorage.getItem('user')))
       } else {
         localStorage.removeItem('user')
@@ -195,18 +195,16 @@ export default {
       } else {
         // 用户已经登录,获取该用户的购物车信息
         cartsAPI
-          .showCarts(val.id)
+          .showCarts(JSON.parse(localStorage.getItem('user')).id)
           .then(res => {
-            if (res.status === 200) {
+            if (res.msg === '成功') {
               if (res.data === null) {
                 this.setShoppingCart([])
               } else {
                 this.setShoppingCart(res.data)
               }
-            } else if (res.status === 20001) {
-              //token过期，需要重新登录
-              this.loginExpired(res.msg)
-            } else {
+            } 
+            else {
               this.$notify.error({
                 title: '购物车获取失败',
                 message: res.msg

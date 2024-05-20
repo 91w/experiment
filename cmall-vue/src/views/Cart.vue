@@ -25,7 +25,7 @@
           <div class="cart-header-select">
             <el-dropdown>
               <router-link to class="href">
-                <span style="margin-right:5px">{{this.$store.getters.getUser.nickname}}</span>
+                <span style="margin-right:5px">{{this.$store.getters.getUser.username}}</span>
                 <i class="el-icon-caret-bottom"></i>
               </router-link>
               <el-dropdown-menu slot="dropdown">
@@ -63,9 +63,9 @@
             <el-checkbox v-model="isAllCheck">全选</el-checkbox>
           </div>
           <div class="pro-img"></div>
-          <div class="pro-name">商品名称</div>
+          <!-- <div class="pro-name">商品名称</div> -->
+          <div class="pro-num">描述</div>
           <div class="pro-price">单价</div>
-          <div class="pro-num">数量</div>
           <div class="pro-total">小计</div>
           <div class="pro-action">操作</div>
         </li>
@@ -74,29 +74,20 @@
         <!-- 购物车列表 -->
         <li class="product-list" v-for="(item,index) in getShoppingCart" :key="item.id">
           <div class="pro-check">
-            <el-checkbox :value="item.check" @change="checkChange($event,index)"></el-checkbox>
+            <el-checkbox v-model="item.status" :value="item.status" @change="checkChange($event,index)"></el-checkbox>
           </div>
           <div class="pro-img">
-            <router-link :to="{ path: '/goods/details', query: {productID:item.product_id} }">
-              <img :src="item.img_path" />
+            <router-link :to="{ path: '/goods/details', query: {productID:item.id} }">
+              <img :src="'data:image/jpeg;base64,' + item.mainimg " />
             </router-link>
           </div>
-          <div class="pro-name">
-            <router-link
-              :to="{ path: '/goods/details', query: {productID:item.product_id} }"
-            >{{item.name}}</router-link>
-          </div>
-          <div class="pro-price">{{item.discount_price}}元</div>
           <div class="pro-num">
-            <el-input-number
-              size="small"
-              :value="item.num"
-              @change="handleChange($event,index,item.product_id)"
-              :min="1"
-              :max="item.max_num"
-            ></el-input-number>
+            <router-link
+            :to="{ path: '/goods/details', query: {productID:item.id} }"
+            >{{item.commdesc}}</router-link>
           </div>
-          <div class="pro-total pro-total-in">{{item.discount_price*item.num}}元</div>
+          <div class="pro-price">{{item.thinkmoney}}元</div>
+          <div class="pro-total pro-total-in">{{item.thinkmoney}}元</div>
           <div class="pro-action">
             <el-popover placement="right">
               <p>确定删除吗？</p>
@@ -104,7 +95,7 @@
                 <el-button
                   type="primary"
                   size="mini"
-                  @click="deleteItem($event,item.id,item.product_id)"
+                  @click="deleteItem($event,item.id)"
                 >确定</el-button>
               </div>
               <i class="el-icon-error" slot="reference" style="font-size: 18px"></i>
@@ -158,14 +149,16 @@ import * as cartsAPI from '@/api/carts'
 
 export default {
   data() {
-    return {}
+    return {
+    
+    }
   },
   methods: {
     ...mapActions(['updateShoppingCart', 'deleteShoppingCart', 'checkAll']),
     // 修改商品数量的时候调用该函数
     handleChange(currentValue, key, productID) {
       // 当修改数量时，默认勾选
-      this.updateShoppingCart({ key: key, prop: 'check', val: true })
+      this.updateShoppingCart({ key: key, prop: 'status', val: true })
       // 向后端发起更新购物车的数据库信息请求
       var form = {
         user_id: this.$store.getters.getUser.id,
@@ -195,10 +188,10 @@ export default {
     },
     checkChange(val, key) {
       // 更新vuex中购物车商品是否勾选的状态
-      this.updateShoppingCart({ key: key, prop: 'check', val: val })
+      this.updateShoppingCart({ key: key, prop: 'status', val: val })
     },
     // 向后端发起删除购物车的数据库信息请求
-    deleteItem(e, id, productID) {
+    deleteItem(e, productID) {
       var form = {
         user_id: this.$store.getters.getUser.id,
         product_id: productID
@@ -206,7 +199,7 @@ export default {
       cartsAPI
         .deleteCart(form)
         .then(res => {
-          if (res.status === 200) {
+          if (res.msg === '成功') {
             // 更新vuex状态
             this.deleteShoppingCart(productID)
             this.notifySucceed('删除成功')
@@ -373,7 +366,7 @@ export default {
 }
 .shoppingCart .cart-content ul .pro-name {
   float: left;
-  width: 380px;
+  width: 150px;
 }
 .shoppingCart .cart-content ul .pro-name a {
   color: #424242;
@@ -383,19 +376,20 @@ export default {
 }
 .shoppingCart .cart-content ul .pro-price {
   float: left;
-  width: 140px;
-  padding-right: 18px;
+  width: 70px;
+  padding-left: 10px;
   text-align: center;
 }
 .shoppingCart .cart-content ul .pro-num {
   float: left;
-  width: 150px;
+  width: 550px;
+  white-space: normal;
   text-align: center;
 }
 .shoppingCart .cart-content ul .pro-total {
   float: left;
-  width: 120px;
-  padding-right: 81px;
+  width: 70px;
+  padding-left: 71px;
   text-align: right;
 }
 .shoppingCart .cart-content ul .pro-total-in {
@@ -403,7 +397,8 @@ export default {
 }
 .shoppingCart .cart-content ul .pro-action {
   float: left;
-  width: 80px;
+  width: 70px;
+  padding-left: 101px;
   text-align: center;
 }
 .shoppingCart .cart-content ul .pro-action i:hover {

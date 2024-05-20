@@ -5,15 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wgh.handshop.entity.Carousel;
-import org.wgh.handshop.entity.Commimages;
 import org.wgh.handshop.entity.Commodity;
-import org.wgh.handshop.mapper.CommimagesMapper;
 import org.wgh.handshop.mapper.CommodityMapper;
-import org.wgh.handshop.vo.ResultVo;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class CarouselService {

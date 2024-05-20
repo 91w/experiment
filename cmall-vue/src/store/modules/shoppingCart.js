@@ -20,7 +20,7 @@ export default {
       let totalNum = 0
       for (let i = 0; i < state.shoppingCart.length; i++) {
         const temp = state.shoppingCart[i]
-        totalNum += temp.num
+        totalNum += 1
       }
       return totalNum
     },
@@ -30,7 +30,7 @@ export default {
       for (let i = 0; i < state.shoppingCart.length; i++) {
         const temp = state.shoppingCart[i]
         // 只要有一个商品没有勾选立即return false;
-        if (!temp.check) {
+        if (temp.status == 0) {
           isAllCheck = false
           return isAllCheck
         }
@@ -43,7 +43,7 @@ export default {
       let checkGoods = []
       for (let i = 0; i < state.shoppingCart.length; i++) {
         const temp = state.shoppingCart[i]
-        if (temp.check) {
+        if (temp.status == 1) {
           checkGoods.push(temp)
         }
       }
@@ -54,8 +54,8 @@ export default {
       let totalNum = 0
       for (let i = 0; i < state.shoppingCart.length; i++) {
         const temp = state.shoppingCart[i]
-        if (temp.check) {
-          totalNum += temp.num
+        if (temp.status == 1) {
+          totalNum += 1
         }
       }
       return totalNum
@@ -65,8 +65,8 @@ export default {
       let totalPrice = 0
       for (let i = 0; i < state.shoppingCart.length; i++) {
         const temp = state.shoppingCart[i]
-        if (temp.check) {
-          totalPrice += temp.discount_price * temp.num
+        if (temp.status == 1) {
+          totalPrice += temp.thinkmoney * 1
         }
       }
       return totalPrice
@@ -84,17 +84,7 @@ export default {
     },
     updateShoppingCart(state, payload) {
       // 更新购物车
-      // 可更新商品数量和是否勾选
-      // 用于购物车点击勾选及加减商品数量
-      if (payload.prop == 'num') {
-        // 判断效果的商品数量是否大于限购数量或小于1
-        if (state.shoppingCart[payload.key].maxNum < payload.val) {
-          return
-        }
-        if (payload.val < 1) {
-          return
-        }
-      }
+      
       // 根据商品在购物车的数组的索引和属性更改
       state.shoppingCart[payload.key][payload.prop] = payload.val
     },
@@ -103,7 +93,7 @@ export default {
       // 用于在商品详情页点击添加购物车,后台返回002，“该商品已在购物车，数量 +1”，更新vuex的商品数量
       for (let i = 0; i < state.shoppingCart.length; i++) {
         const temp = state.shoppingCart[i]
-        if (temp.productID == productID) {
+        if (temp.id == productID) {
           if (temp.num < temp.maxNum) {
             temp.num++
           }
@@ -114,7 +104,7 @@ export default {
       // 根据购物车id删除购物车商品
       for (let i = 0; i < state.shoppingCart.length; i++) {
         const temp = state.shoppingCart[i]
-        if (temp.product_id == id) {
+        if (temp.id == id) {
           state.shoppingCart.splice(i, 1)
         }
       }
@@ -122,7 +112,7 @@ export default {
     checkAll(state, data) {
       // 点击全选按钮，更改每个商品的勾选状态
       for (let i = 0; i < state.shoppingCart.length; i++) {
-        state.shoppingCart[i].check = data
+        state.shoppingCart[i].status = data
       }
     }
   },

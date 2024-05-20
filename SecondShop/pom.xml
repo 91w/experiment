@@ -18,6 +18,13 @@
         <spring-ai.version>0.8.1</spring-ai.version>
     </properties>
     <dependencies>
+        <!-- 支付宝沙箱 -->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.39.60.ALL</version>
+        </dependency>
+
         <!-- 生成验证码  -->
         <dependency>
             <groupId>com.github.penggle</groupId>

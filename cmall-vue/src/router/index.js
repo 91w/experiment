@@ -8,6 +8,7 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from "../store/index"; // 读入vue存储的信息(一般在内存中)
 
 Vue.use(Router)
 const routes = [
@@ -33,6 +34,58 @@ const routes = [
     }
   },
   {
+    path: '/admin/login',
+    name: 'Alogin',
+    component: () => import('../views/admin.vue'),
+    meta: {
+      showMenu: false
+    }
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('../views/AdminHome.vue'),
+    meta: {
+      requireAuth: true,
+      role: true,
+      showMenu: false,
+      showFooter: false
+    }
+  },
+  {
+    path: '/admin/user',
+    name: 'UserManage',
+    component: () => import('../views/UserManage.vue'),
+    meta: {
+      requireAuth: true,
+      role: true,
+      showMenu: false,
+      showFooter: false
+    }
+  },
+  {
+    path: '/admin/profile',
+    name: 'Show',
+    component: () => import('../views/Profile.vue'),
+    meta: {
+      requireAuth: true,
+      role: true,
+      showMenu: false,
+      showFooter: false
+    }
+  },
+  {
+    path: '/admin/goods',
+    name: 'GoodsManage',
+    component: () => import('../views/GoodsManage.vue'),
+    meta: {
+      requireAuth: true,
+      role: true,
+      showMenu: false,
+      showFooter: false
+    }
+  },
+  {
     path: '/error',
     name: 'Error',
     component: () => import('../components/Error.vue')
@@ -40,17 +93,26 @@ const routes = [
   {
     path: '/goods',
     name: 'Goods',
-    component: () => import('../views/Goods.vue')
+    component: () => import('../views/Goods.vue'),
+    meta: {
+      requireAuth: true
+    }
   },
   {
     path: '/about',
     name: 'About',
-    component: () => import('../views/About.vue')
+    component: () => import('../views/About.vue'),
+    meta: {
+      requireAuth: true
+    }
   },
   {
     path: '/goods/details',
     name: 'Details',
-    component: () => import('../views/Details.vue')
+    component: () => import('../views/Details.vue'),
+    meta: {
+      requireAuth: true
+    }
   },
   {
     path: '/cart',
@@ -95,6 +157,14 @@ const routes = [
     }
   },
   {
+    path: '/service',
+    name: 'Service',
+    component: () => import('../views/Service.vue'),
+    meta: {
+      requireAuth: true // 需要验证登录状态
+    }
+  },
+  {
     path: '/center',
     name: 'Center',
     component: () => import('../views/Center.vue'),
@@ -122,6 +192,14 @@ const routes = [
     path: '/user/address',
     name: 'UserAddress',
     component: () => import('../views/UserAddress.vue'),
+    meta: {
+      requireAuth: true // 需要验证登录状态
+    }
+  },
+  {
+    path: '/upload',
+    name: 'Upload',
+    component: () => import('../views/Upload.vue'),
     meta: {
       requireAuth: true // 需要验证登录状态
     }

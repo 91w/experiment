@@ -30,12 +30,12 @@
               </router-link>
               <span class="cut">|</span>
               <router-link :to="{ path: '/order', query: {type:2} }">
-                <span :class="type==2?'select':'no-select'">已支付</span>
+                <span :class="type==3?'select':'no-select'">已支付</span>
               </router-link>
               <span class="cut">|</span>
-              <span class="no-select">订单回收站</span>
+              <!-- <span class="no-select">订单回收站</span> -->
               <div class="search">
-                <el-input placeholder="输入商品名称、订单号" v-model="search">
+                <el-input placeholder="输入商品名称或订单号" v-model="search">
                   <el-button slot="append" icon="el-icon-search" @click="searchClick"></el-button>
                 </el-input>
               </div>
@@ -43,57 +43,58 @@
             <div v-if="orders.length>0">
               <!--我的订单头部 end-->
               <!--订单列表-->
-              <div class="order-list" v-for="(item,index) in orders" :key="index">
+              <div class="order-list" v-for="(item,index) in orders[0]" :key="index">
                 <div class="order-list-head">
                   <div class="order-pay" v-if="item.type==1">等待付款</div>
                   <div class="order-pay" v-else>已付款</div>
                   <div class="order-info">
                     <div style="width:650px;">
-                      <span class="info">{{item.created_at | dateFormat}}</span>
+                      <span class="info">{{item.createtime | dateFormat}}</span>
                       <span class="cut">|</span>
-                      <span class="info">{{item.address_name}}</span>
+                      <!-- <span class="info">{{item.address_name}}</span> -->
                       <span class="cut">|</span>
-                      <span class="info">订单号：{{item.order_num}}</span>
+                      <span class="info">订单号：{{item.orderid}}</span>
                       <span class="cut">|</span>
                       <span class="info">在线支付</span>
                     </div>
                     <span class="info" style="margin-left:30px">应付金额：</span>
-                    <span class="money">{{item.discount_price*item.num}}</span>
+                    <span class="money">{{item.thinkmoney}}</span>
                     <span class="info">元</span>
                   </div>
                 </div>
                 <div class="order-list-product">
                   <div class="pro-img">
                     <router-link
-                      :to="{ path: '/goods/details', query: {productID:item.product_id} }"
+                      :to="{ path: '/goods/details', query: {productID:item.commid} }"
                     >
-                      <img :src="item.img_path" />
+                      <!-- <img :src="item.img_path" /> -->
+                      <img :src="'data:image/jpeg;base64,' + item.mainimg"/>
                     </router-link>
                   </div>
                   <div class="pro-info">
                     <p style="margin-bottom:7px">
                       <router-link
                         class="info-href"
-                        :to="{ path: '/goods/details', query: {productID:item.product_id} }"
-                      >{{item.name}}</router-link>
+                        :to="{ path: '/goods/details', query: {productID:item.commid} }"
+                      >{{item.commname}}</router-link>
                     </p>
-                    <span>{{item.discount_price}}</span>&nbsp;×
-                    <span>{{item.num}}</span>
+                    <span>{{item.thinkmoney}}</span>&nbsp;
+                    <!-- <span>{{item.num}}</span> -->
                   </div>
                   <div class="operate">
                     <div v-if="item.type==1">
-                      <router-link :to="{ path: '/payment', query: {orderNum:item.order_num} }">
+                      <router-link :to="{ path: '/payment', query: {orderNum:item.orderid} }">
                         <el-button class="button-pay">立即付款</el-button>
                       </router-link>
                     </div>
                     <div>
                       <router-link
-                        :to="{ path: '/order/details', query: {orderNum:item.order_num} }"
+                        :to="{ path: '/order/details', query: {orderNum:item.orderid} }"
                       >
                         <el-button plain class="button-detail">订单详情</el-button>
                       </router-link>
                     </div>
-                    <div v-if="item.type==2">
+                    <div v-if="item.type==3">
                       <el-button type="info" class="button-detail">删除订单</el-button>
                     </div>
                   </div>
@@ -137,7 +138,8 @@ export default {
       total: 0,
       start: 0,
       limit: 5,
-      type: ''
+      type: '',
+      user: JSON.parse(localStorage.getItem('user'))
     }
   },
   activated() {
@@ -162,19 +164,17 @@ export default {
       // 获取订单数据
       ordersAPI
         .listOrders(
-          this.$store.getters.getUser.id,
+          // this.$store.getters.getUser.id,
+          this.user.id,
           this.type,
           this.start,
           this.limit
         )
         .then(res => {
-          if (res.status === 200) {
-            this.orders = res.data.items
-            this.total = res.data.total
-          } else if (res.status === 20001) {
-            //token过期，需要重新登录
-            this.loginExpired(res.msg)
-          } else {
+          if (res.msg === '成功') {
+            this.orders = res.data
+            this.total = this.orders.length
+          }  else {
             this.notifyError('获取订单失败', res.msg)
           }
         })

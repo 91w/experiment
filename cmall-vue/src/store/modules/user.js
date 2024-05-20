@@ -12,7 +12,6 @@ export default {
   },
   getters: {
     getUser(state) {
-      console.log("current user:" + state.user)
       return state.user
     }
   },

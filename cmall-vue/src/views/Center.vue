@@ -18,7 +18,8 @@
             <!--个人信息头部-->
             <div class="center-user">
               <div class="user-avator">
-                <img :src="this.$store.getters.getUser.avatar" />
+                <img :src="'data:image/jpeg;base64,' + this.$store.getters.getUser.uimage" alt />
+                <!-- <img :src="this.$store.getters.getUser.uimage" /> -->
               </div>
               <div class="user-info">
                 <p
@@ -31,25 +32,25 @@
               <div class="user-message">
                 <ul>
                   <li>账户安全：</li>
-                  <li>绑定QQ：</li>
                   <li>绑定邮箱：</li>
+                  <li>个人留言</li>
                 </ul>
               </div>
               <div class="user-data">
                 <ul>
                   <li>普通</li>
-                  <li>12345678910</li>
                   <li v-if="this.$store.getters.getUser.email==''">
                     点此
                     <a href="javascript:;" @click="addVisible=true">绑定邮箱</a>
                   </li>
                   <li v-else>
                     {{this.$store.getters.getUser.email}}
-                    <a
+                    <!-- <a
                       href="javascript:;"
                       @click="deleteVisible=true"
-                    >『解除绑定』</a>
+                    >『解除绑定』</a> -->
                   </li>
+                  <li>{{this.$store.getters.getUser.sign}}</li>
                 </ul>
               </div>
             </div>

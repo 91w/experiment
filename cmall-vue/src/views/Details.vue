@@ -66,7 +66,7 @@
         <!-- 内容区底部按钮 -->
         <div class="button">
           <el-button class="shop-cart" :disabled="dis" @click="addShoppingCart">加入购物车</el-button>
-          <el-button class="like" @click="addCollect">收藏</el-button>
+          <el-button class="like" @click="addFavorite">收藏</el-button>
         </div>
         <!-- 内容区底部按钮END -->
         <div class="pro-policy">
@@ -94,30 +94,27 @@
     </div>
 
     <!-- 主要内容END -->
-    <div>
+    <div class="product-select" id="product-select">
       <el-form :model="form" status-icon  ref="form">
-        <el-form-item label="Activity form">
-          <el-input v-model="form.desc" type="textarea" />
+        <el-form-item label="留下你的评价">
+          <el-input v-model="form.content" type="textarea" />
         </el-form-item>
       </el-form>
-        <a href="javascript:;" class="btn-gradient blue block" @click="login('form')">登录</a>
-    </div>
-    <!-- <div class="product-select" id="product-select">
-      <el-button
-        type="text"
-        :class="select == 0 ? 'isSelect' : 'notSelect'"
-        @click="showInfoImgs"
-      >商品概述</el-button>
-      <span class="cut">|</span>
-      <el-button
-        type="text"
-        :class="select == 1 ? 'isSelect' : 'notSelect'"
-        @click="showParamImgs"
-      >商品参数</el-button>
-    </div>
-    <div class="product-img" v-for="item in imgs" :key="item.id">
-      <img v-lazy="item.img_path" />
-    </div> -->
+      <a href="javascript:;" class="btn-gradient blue block" @click="comment('form')">评论</a>
+    </div>  
+      <div  class="comment" v-for="item in comments" :key="item.id" :data="item" style="width: 100%">
+          <img style="width: 30px;
+          height: 30px;
+          border-radius: 50%; 
+          object-fit: cover; " class="user_img" :src="'data:image/jpeg;base64,' + item.userimage">
+          <div class="meta">
+            <strong>{{ item.username}}</strong> - <span>{{item.createtime}}</span>
+          </div>
+        <div class="content">
+            {{item.content}}
+        </div>
+      </div>
+
 
   </div>
   <div class="not-found" v-else>查询不到该商品</div>
@@ -125,7 +122,7 @@
 <script>
 import { mapActions } from 'vuex'
 import * as productsAPI from '@/api/products/'
-import * as imgsAPI from '@/api/img/'
+import * as commentAPI from '@/api/comment/'
 import * as favoritesAPI from '@/api/favorites/'
 import * as cartsAPI from '@/api/carts/'
 export default {
@@ -135,10 +132,14 @@ export default {
       productID: 0, // 商品id
       productDetails: '', // 商品详细信息
       productPictures: '', // 商品图片
-      imgs: '', //商品概述图片
-      infoImgs: '',
-      paramImgs: '',
-      select: 0
+      select: 0,
+      comments: [],
+      form: {
+        id: this.$route.query.productID,
+        content: '',
+        // user_id: this.$store.state.user.id
+        user_id: JSON.parse(localStorage.getItem("user")).id
+      }
     }
   },
   // 通过路由获取商品id
@@ -159,21 +160,17 @@ export default {
     // 获取商品详细信息
     load() {
       productsAPI.showProduct(this.productID).then(res => {
-        console.log("商品详细信息：", res)
+        
         this.productDetails = res.data
       })
       productsAPI.showPictures(this.productID).then(res => {
-        console.log("商品图片：", res)
+        
         this.productPictures = res
-        console.log("this:" ,this.productPictures)
+        
       })
-      
-      imgsAPI.showInfoImgs(this.productID).then(res => {
-        this.infoImgs = res.data
-        this.imgs = this.infoImgs
-      })
-      imgsAPI.showParamImgs(this.productID).then(res => {
-        this.paramImgs = res.data
+      commentAPI.showComment(this.productID).then(res => {
+        
+        this.comments = res.data
       })
     },
     goInfo() {
@@ -184,13 +181,21 @@ export default {
       this.showParamImgs()
       document.getElementById('product-select').scrollIntoView()
     },
-    showInfoImgs() {
-      this.select = 0
-      this.imgs = this.infoImgs
-    },
-    showParamImgs() {
-      this.select = 1
-      this.imgs = this.paramImgs
+
+    comment(formName) {
+          commentAPI
+            .addComment(this.form)
+            .then(res => {
+              
+              if (res.msg == "成功") {
+                
+              } else {
+                this.notifyError('评论失败', res.msg)
+              }
+            })
+            .catch(error => {
+              this.notifyError('评论失败', error)
+            })
     },
     // 加入购物车
     addShoppingCart() {
@@ -200,38 +205,23 @@ export default {
         return
       }
       var form = {
-        user_id: this.$store.getters.getUser.id,
+        user_id: JSON.parse(localStorage.getItem("user")).id,
         product_id: Number(this.productID)
       }
       cartsAPI
         .postCart(form)
         .then(res => {
-          switch (res.status) {
-            case 200:
+          console.log(res)
+          if(res.status === '成功') {
               //新加入购物车成功
               this.unshiftShoppingCart(res.data)
               this.notifySucceed('添加购物车成功')
-              break
-            case 201:
-              // 该商品已经在购物车，数量+1
-              this.addShoppingCartNum(this.productID)
-              this.notifySucceed('该商品已在购物车，数量+1')
-              break
-            case 202:
-              // 商品数量达到限购数量
-              this.dis = true
-              this.notifyError('商品达到限购数量', res.msg)
-              break
-            case 20001:
-              //token过期，需要重新登录
-              this.loginExpired(res.msg)
-              break
-            default:
-              this.notifyError('添加购物车失败', res.msg)
+          } else if(res.status === '失败') {
+              this.notifyErro(res.msg)
           }
         })
         .catch(err => {
-          this.notifyError('添加购物车失败', err)
+          this.notifyError('商品已经在购物车了，看看其他的吧')
         })
     },
     addFavorite() {
@@ -241,18 +231,16 @@ export default {
         return
       }
       var form = {
-        user_id: this.$store.getters.getUser.id,
+        user_id: JSON.parse(localStorage.getItem('user')).id,
         product_id: Number(this.productID)
       }
       favoritesAPI
         .postFavorite(form)
         .then(res => {
-          if (res.status === 200) {
+          if (res.msg === '成功') {
             this.notifySucceed('添加收藏夹成功')
-          } else if (res.status === 20001) {
-            //token过期，需要重新登录
-            this.loginExpired(res.msg)
-          } else {
+          } 
+           else {
             this.notifyError('添加收藏夹失败', res.msg)
           }
         })
@@ -463,8 +451,8 @@ export default {
 #details .product-select .cut {
   font-size: 25px;
   color: #c9c7c7;
-  margin-left: 35px;
-  margin-right: 35px;
+  margin-left: 45px;
+  margin-right: 45px;
 }
 #details .product-img img {
   width: 1225px;
@@ -472,6 +460,24 @@ export default {
   margin: 0 auto;
 }
 /*商品概述&参数END*/
+
+.comment {
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.comment.user_image {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+.comment.meta {
+  font-size: 0.85em;
+  color: #666;
+}
+.comment .content {
+  margin-top: 5px;
+}
 
 /*v-else*/
 .not-found {

@@ -11,7 +11,7 @@
     <div>
       <el-card class="box-card" shadow="hover">
         <router-link to="/">
-          <img src="../assets/imgs/clogo.png" alt />
+          <img src="../assets/imgs/clogo.png" width="280" height="190" alt />
         </router-link>
         <div class="clearfix">
           <span>欢迎回来</span>
@@ -111,7 +111,6 @@ export default {
           userAPI
             .postLogin(this.form)
             .then(res => {
-              console.log(res)
               if (res.status === 404) {
                 this.notifyError('验证失败', res.data.msg)
               } else if (res.data.msg == "成功") {
@@ -123,11 +122,14 @@ export default {
                 this.setUser(user)
                 // 弹出通知框提示登录成功信息
                 this.notifySucceed('登录成功')
-                this.$router.push({
+                this.$router.replace({
                   name: 'Home'
+                }).catch(err => {
+                  console.error(err)
+                  location.reload()
                 })
               } else {
-                console.log(res.data.msg)
+                
                 this.notifyError('登录失败', res.data.msg)
               }
             })

@@ -33,27 +33,35 @@
 
     <div class="main-box">
       <div class="main">
-        <!-- 手机商品展示区域 -->
+        <!-- 苹果手机商品展示区域 -->
         <div class="phone">
           <div class="box-hd">
             <div class="title">苹果</div>
           </div>
           <div class="box-bd">
             <div class="promo-list">
-              <router-link :to="{ path: '/goods/details', query: {productID:1} }">
-                <img :src="'https://cdn.acwing.com/media/user/profile/photo/173183_lg_52f4c2c9ee.jpg'" />
+            <ul>
+              <router-link :to="{ path: '/goods/details', query: {productID:33} }">
+                <li>
+                  <img :src="'data:image/jpeg;base64,' + showList[0] "/>
+                </li>
               </router-link>
-              <!-- 一个推荐的手机 -->
+              <router-link :to="{ path: '/goods/details', query: {productID:38} }">
+                <li>
+                  <img :src="'data:image/jpeg;base64,' + showList[1] "/>
+                </li>
+              </router-link>
+            </ul>
             </div>
             <!-- 下面是列举的几个热门手机 -->
             <div class="list">
-              <MyList :list="phonesList" :isMore="true"></MyList>
+              <MyList :list="iphonesList" :isMore="true"></MyList>
             </div>
           </div>
         </div>
-        <!-- 手机商品展示区域END -->
+        <!-- 苹果手机商品展示区域END -->
 
-        <!-- 家电商品展示区域 -->
+        <!-- 安卓商品展示区域 -->
         <div class="appliance" id="promo-menu">
           <div class="box-hd">
             <div class="title">安卓</div>
@@ -67,68 +75,58 @@
           <div class="box-bd">
             <div class="promo-list">
               <ul>
-                <router-link :to="{ path: '/goods/details', query: {productID:21} }">
+                <router-link :to="{ path: '/goods/details', query: {productID:40} }">
                   <li>
-                    <img
-                      :src="'https://cdn.acwing.com/media/user/profile/photo/173183_lg_52f4c2c9ee.jpg'"
-                    />
+                    <img :src="'data:image/jpeg;base64,' + showList[2] "/>
                   </li>
                 </router-link>
-                <router-link :to="{ path: '/goods/details', query: {productID:22} }">
+                <router-link :to="{ path: '/goods/details', query: {productID:41} }">
                   <li>
-                    <img
-                      :src="'https://cdn.acwing.com/media/user/profile/photo/173183_lg_52f4c2c9ee.jpg'"
-                    />
+                    <img :src="'data:image/jpeg;base64,' + showList[3] "/>
                   </li>
                 </router-link>
               </ul>
             </div>
             <div class="list">
-              <MyList :list="applianceList" :isMore="true"></MyList>
+              <MyList :list="androidList" :isMore="true"></MyList>
             </div>
           </div>
         </div>
-        <!-- 家电商品展示区域END -->
+        <!-- 安卓手机展示区域END -->
 
-        <!-- 配件商品展示区域 -->
+        <!-- 平板展示区域 -->
         <div class="accessory" id="promo-menu">
           <div class="box-hd">
             <div class="title">平板</div>
             <div class="more" id="more">
               <MyMenu :val="3" @fromChild="getChildMsg2">
                 <span slot="1">热门</span>
-                <span slot="2">Ipad</span>
-                <span slot="3">安卓</span>
+                <span slot="2">安卓</span>
+                <span slot="3">Ipad</span>
               </MyMenu>
             </div>
           </div>
           <div class="box-bd">
             <div class="promo-list">
               <ul>
-                <router-link :to="{ path: '/goods/details', query: {productID:30} }">
+                <router-link :to="{ path: '/goods/details', query: {productID:44} }">
                   <li>
-                    <img
-                      :src="'https://cdn.acwing.com/media/user/profile/photo/173183_lg_52f4c2c9ee.jpg'"
-                      alt
-                    />
+                    <img :src="'data:image/jpeg;base64,' + showList[4] "/>
                   </li>
                 </router-link>
-                <router-link :to="{ path: '/goods/details', query: {productID:32} }">
+                <router-link :to="{ path: '/goods/details', query: {productID:45} }">
                   <li>
-                    <img
-                      :src="'https://cdn.acwing.com/media/user/profile/photo/173183_lg_52f4c2c9ee.jpg'"
-                      alt
-                    />
+                    <img :src="'data:image/jpeg;base64,' + showList[5] "/>
                   </li>
                 </router-link>
               </ul>
             </div>
             <div class="list">
-              <MyList :list="accessoryList" :isMore="true"></MyList>
+              <MyList :list="padList" :isMore="true"></MyList>
             </div>
           </div>
         </div>
-        <!-- 配件商品展示区域END -->
+        <!-- 平板展示区域END -->
       </div>
     </div>
   </div>
@@ -143,58 +141,63 @@ export default {
     return {
       carousels: [], // 轮播图数据
       iphonesList: '', // 苹果手机商品列表
-      // anPhonesList: '', // 安卓手机列表
-      applianceList: '', // 安卓手机商品列表
-      applianceHotList: '', // 安卓手机热门商品列表
 
-      accessoryList: '', // 平板商品列表
-      accessoryHotList: '', // 热门平板商品列表
-      phoneShellsList: '', // 安卓平板商品列表
-      chargersList: '', // ipad商品列表
-      applianceActive: 1, // 安卓当前选中的商品分类
-      accessoryActive: 1, // 平板当前选中的商品分类
+      androidList: '', // 安卓展示列表
+      androidHotList: '', // 安卓手机热门商品列表
+      androidPhoneList: '', // 安卓手机商品列表
+
+      padList: '', // 平板商品展示列表
+      padHotList: '', // 热门平板商品列表
+      padAndroidList: '', // 安卓平板商品列表
+      ipadList: '', // ipad商品列表
+
+      androidActive: 1, // 安卓当前选中的商品分类
+      padActive: 1, // 平板当前选中的商品分类
       start: 0,
-      limit: 7
+      limit: 7,
+      showList: ''
     }
   },
   watch: {
     // 家电当前选中的商品分类，响应不同的商品数据
-    applianceActive: function(val) {
-      // 页面初始化的时候把applianceHotList(热门家电商品列表)直接赋值给applianceList(家电商品列表)
+    androidActive: function(val) {
+      // 页面初始化的时候把androidHotList(热门安卓商品列表)直接赋值给androidList(安卓商品列表)
       // 所以在切换商品列表时判断applianceHotList是否为空,为空则是第一次切换,把applianceList赋值给applianceHotList
-      if (this.applianceHotList == '') {
-        this.applianceHotList = this.applianceList
+
+      if (this.androidHotList == '') {
+        this.androidHotList = this.androidList
       }
       if (val == 1) {
         // 1为热门商品
-        this.applianceList = this.applianceHotList
+        this.androidList = this.androidHotList
         return
       }
       if (val == 2) {
-        // 2为电视商品
-        this.applianceList = this.televisionsList
+        // 2为安卓商品
+        this.androidList = this.androidPhoneList  
         return
       }
     },
-    accessoryActive: function(val) {
+    padActive: function(val) {
+
       // 页面初始化的时候把accessoryHotList(热门配件商品列表)直接赋值给accessoryList(配件商品列表)
       // 所以在切换商品列表时判断accessoryHotList是否为空,为空则是第一次切换,把accessoryList赋值给accessoryHotList
-      if (this.accessoryHotList == '') {
-        this.accessoryHotList = this.accessoryList
+      if (this.padHotList == '') {
+        this.padHotList = this.padList
       }
       if (val == 1) {
         // 1为热门商品
-        this.accessoryList = this.accessoryHotList
+        this.padList = this.padHotList
         return
       }
       if (val == 2) {
-        // 2为保护套商品
-        this.accessoryList = this.phoneShellsList
+        // 2为安卓平板商品
+        this.padList = this.padAndroidList
         return
       }
       if (val == 3) {
-        //3 为充电器商品
-        this.accessoryList = this.chargersList
+        //3 为ipad商品
+        this.padList = this.ipadList
         return
       }
     }
@@ -205,13 +208,21 @@ export default {
   },
   methods: {
     load() {
-      //获取热门家电
+      productsAPI
+        .showImageList()
+        .then(res => {
+            this.showList = res.data
+        })
+        .catch(err => {
+          this.notifyError('获取热门平板失败', err)
+        })
+      //获取热门平板
       rankingAPI
         .listPadRanking()
         .then(res => {
-          if (res.status === 200) {
-            this.applianceHotList = res.data
-            this.applianceList = res.data
+          if (res.msg === '成功') {
+            this.padHotList = res.data
+            this.padList = res.data
           } else {
             this.notifyError('获取热门平板失败')
           }
@@ -219,13 +230,13 @@ export default {
         .catch(err => {
           this.notifyError('获取热门平板失败', err)
         })
-      //获取热门配件
+      //获取热门安卓
       rankingAPI
         .listAndroidRanking()
         .then(res => {
-          if (res.status === 200) {
-            this.accessoryHotList = res.data
-            this.accessoryList = res.data
+          if (res.msg === '成功') {
+            this.androidHotList = res.data
+            this.androidList = res.data
           } else {
             this.notifyError('获取热门安卓手机失败')
           }
@@ -233,24 +244,21 @@ export default {
         .catch(err => {
           this.notifyError('获取热门安卓手机失败', err)
         })
-      //获取手机列表
-      this.getProduct(1, 'phonesList')
-      //获取电视列表
-      this.getProduct(2, 'televisionsList')
-      //获取保护套列表
-      this.getProduct(5, 'phoneShellsList')
-      //获取充电器列表
-      this.getProduct(7, 'chargersList')
+      //获取苹果手机列表
+      this.getProduct('苹果', 'iphonesList')
+      //获取android手机
+      this.getProduct('安卓', 'androidPhoneList')
+      //获取安卓平板列表
+      this.getProduct('安卓平板', 'padAndroidList')
+      //获取ipad列表
+      this.getProduct('苹果平板', 'ipadList')
       
       carouselsAPI
         .listCarousels()
         .then(res => {
-          console.log(res)
           if (res.msg == '成功') {
-            console.log("1:",res.data)
             let itemsArray = Object.values(res.data)
             this.carousels = itemsArray
-            console.log("2:",this.carousels)
           } else {
             this.notifyError('获取轮播图失败', res.msg)
           }
@@ -261,19 +269,20 @@ export default {
     },
     // 获取家电模块子组件传过来的数据
     getChildMsg(val) {
-      this.applianceActive = val
+      this.androidActive = val
     },
     // 获取配件模块子组件传过来的数据
     getChildMsg2(val) {
-      this.accessoryActive = val
+      this.padActive = val
     },
     // 获取各类商品数据方法封装
-    getProduct(categoryID, val) {
+    getProduct(category, val) {
       productsAPI
-        .listProducts(categoryID, this.start, this.limit)
-        .then(res => {
-          if (res.status === 200) {
-            this[val] = res.data.items
+        .listProducts(category, this.start, this.limit)
+        .then(res => { 
+          if (res.msg === '成功') {
+            // this[val] = res.data.items
+            this[val] = res.data
           } else {
             this.notifyError('获取失败', res.msg)
           }

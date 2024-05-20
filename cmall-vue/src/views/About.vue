@@ -11,13 +11,10 @@
   <div class="about" id="about" name="about">
     <div class="about-layout">
       <el-row :gutter="10">
-        <div>
-          <CenterMenu></CenterMenu>
-        </div>
         <el-col :span="20">
           <div class="about-content">
             <div class="extra"></div>
-            <MyMarkdown></MyMarkdown>
+              我们是致力于，提供便捷、快速、安全、高效的一站式服务网站
             <div class="extra1"></div>
           </div>
         </el-col>
@@ -34,8 +31,6 @@ export default {
     return {}
   },
   components: {
-    CenterMenu,
-    MyMarkdown
   }
 }
 </script>

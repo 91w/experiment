@@ -9,10 +9,10 @@ import axios from 'axios'
 
 // 读取热门家电
 const listPadRanking = () =>
-  axios.get('/api/v1/padrank').then(res => res.data)
+  axios.get('/api/padrank').then(res => res.data)
 
 // 读取热门配件
 const listAndroidRanking = () =>
-  axios.get('/api/v1/androidrank').then(res => res.data)
+  axios.get('/api/androidrank').then(res => res.data)
 
 export { listPadRanking, listAndroidRanking }

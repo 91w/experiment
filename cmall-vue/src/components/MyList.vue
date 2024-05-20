@@ -18,17 +18,17 @@
           <i class="el-icon-close delete" slot="reference" v-show="isDelete"></i>
         </el-popover>
         <router-link :to="{ path: '/goods/details', query: {productID:item.id} }">
-          <img :src="item.img_path" alt />
-          <h2>{{item.name}}</h2>
-          <h3>{{item.title}}</h3>
+          <img :src="'data:image/jpeg;base64,' + item.mainimg" alt />
+          <h2>{{item.commname}}</h2>
+          <h3>{{item.commdesc}}</h3>
           <p>
-            <span>{{item.discount_price}}元</span>
-            <span v-show="item.price != item.discount_price" class="del">{{item.price}}元</span>
+            <span>{{item.thinkmoney}}元</span>
+            <span v-show="item.orimoney != item.thinkmoney" class="del">{{item.orimoney}}元</span>
           </p>
         </router-link>
       </li>
       <li v-show="isMore && list.length>=1" id="more">
-        <router-link :to="{ path: '/goods', query: {categoryID:categoryID} }">
+        <router-link :to="{ path: '/goods', query: {category:category} }">
           浏览更多
           <i class="el-icon-d-arrow-right"></i>
         </router-link>
@@ -47,25 +47,27 @@ export default {
     return {}
   },
   computed: {
+
     // 通过list获取当前显示的商品的分类ID，用于“浏览更多”链接的参数
-    categoryID: function() {
-      let categoryID = []
+    category: function() {
+      let category = ''
       if (this.list != '') {
-        for (let i = 0; i < this.list.length; i++) {
-          const id = this.list[i].category_id
-          if (!categoryID.includes(id)) {
-            categoryID.push(id)
-          }
-        }
+        // for (let i = 0; i < this.list.length; i++) {
+        //   const type = this.list[i].category
+        //   if (!category.includes(type)) {
+        //     category.push(type)
+        //   }
+        // }
+        category = this.list[0].category
       }
-      return categoryID
+      return category
     }
   },
   methods: {
-    deleteFavorite(product_id, index) {
+    deleteFavorite(commid, index) {
       var form = {
         user_id: this.$store.getters.getUser.id,
-        product_id: product_id
+        product_id: commid
       }
       favoriteAPI
         .deleteFavorite(form)

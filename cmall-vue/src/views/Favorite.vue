@@ -51,6 +51,7 @@
 <script>
 import CenterMenu from '../components/CenterMenu'
 import * as favoriteAPI from '@/api/favorites'
+import user from '../store/modules/user'
 export default {
   name: 'Favorite',
   data() {
@@ -59,7 +60,7 @@ export default {
       pageSize: 12,
       total: 0,
       start: 0,
-      limit: 12
+      limit: 12,
     }
   },
   methods: {
@@ -70,11 +71,11 @@ export default {
     getFavorites() {
       // 获取收藏数据
       favoriteAPI
-        .showFavorites(this.$store.getters.getUser.id, this.start, this.limit)
+        .showFavorites(JSON.parse(localStorage.getItem('user')).id, this.start, this.limit)
         .then(res => {
-          if (res.status === 200) {
-            this.collectList = res.data.items
-            this.total = res.data.total
+          if (res.msg === '成功') {
+            this.collectList = res.data
+            this.total = res.total
           } else if (res.status === 20001) {
             //token过期，需要重新登录
             this.loginExpired(res.msg)

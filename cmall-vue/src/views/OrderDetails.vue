@@ -19,15 +19,15 @@
               <p>订单详情</p>
             </div>
             <div class="order-operate">
-              <div class="order-num">订单号：{{order.order_num}}</div>
-              <div class="order-button" v-if="order.type==1">
+              <div class="order-num">订单号：{{order[0].orderid}}</div>
+              <div class="order-button" v-if="order[0].type==1">
                 <el-button class="cancel" type="info" size="small" style="width:120px" plain>取消订单</el-button>
-                <router-link :to="{ path: '/payment', query: {orderNum:order.order_num}}">
+                <router-link :to="{ path: '/payment', query: {orderNum:order[0].orderid}}">
                   <el-button class="pay" size="small" style="width:120px">立即付款</el-button>
                 </router-link>
               </div>
             </div>
-            <div class="order-step-info" v-if="order.type==1">等待付款</div>
+            <div class="order-step-info" v-if="order[0].type==1">等待付款</div>
             <div class="order-success-info" v-else>已付款</div>
             <div class="order-step">
               <el-steps
@@ -36,9 +36,9 @@
                 finish-status="success"
                 align-center
               >
-                <el-step title="下单" :description="order.created_at| dateFormat"></el-step>
-                <el-step title="付款" v-if="order.type==1"></el-step>
-                <el-step title="付款" :description="order.updated_at| dateFormat" v-else></el-step>
+                <el-step title="下单" :description="order[0].createtime| dateFormat"></el-step>
+                <el-step title="付款" v-if="order[0].type==1"></el-step>
+                <el-step title="付款" :description="order[0].createtime| dateFormat" v-else></el-step>
                 <el-step title="配货"></el-step>
                 <el-step title="出库"></el-step>
                 <el-step title="交易成功"></el-step>
@@ -47,24 +47,23 @@
             <div class="extra"></div>
             <div class="extra"></div>
 
-            <div class="order-list-product">
+            <div class="order-list-product" v-for="item in order" :key="item.commid">
               <div class="pro-img">
-                <router-link :to="{ path: '/goods/details', query: {productID:order.product_id} }">
-                  <img :src="order.img_path" />
+                <router-link :to="{ path: '/goods/details', query: {productID:item.commid} }">
+                  <img :src="'data:image/jpeg;base64,' + item.mainimg"/>
                 </router-link>
               </div>
               <div class="pro-info">
                 <span style="margin-bottom:7px">
                   <router-link
                     class="info-href"
-                    :to="{ path: '/goods/details', query: {productID:order.product_id} }"
-                  >{{order.name}}</router-link>
+                    :to="{ path: '/goods/details', query: {productID:item.commid} }"
+                  >{{item.commname}}</router-link>
                 </span>
               </div>
               <div class="pro-price">
                 <span>
-                  {{order.discount_price}}元&nbsp;×
-                  {{order.num}}
+                  {{item.thinkmoney}}元&nbsp;
                 </span>
               </div>
             </div>
@@ -76,9 +75,9 @@
                 <p>收货地址：</p>
               </div>
               <div class="order-address-data">
-                <p>{{order.address_name}}</p>
-                <p>{{order.address_phone}}</p>
-                <p>{{order.address}}</p>
+                <p>{{address.name}}</p>
+                <p>{{address.phone}}</p>
+                <p>{{address.address}}</p>
               </div>
             </div>
             <div class="order-address-title">支付方式</div>
@@ -109,11 +108,11 @@
                 <ul>
                   <li>
                     <span class="title">商品件数：</span>
-                    <span class="value">{{order.num}}件</span>
+                    <span class="value">{{order.length}}件</span>
                   </li>
                   <li>
                     <span class="title">商品总价：</span>
-                    <span class="value">{{order.discount_price}}元</span>
+                    <span class="value">{{total_price}}元</span>
                   </li>
                   <li>
                     <span class="title">活动优惠：</span>
@@ -130,7 +129,7 @@
                   <li class="total">
                     <span class="title">应付总额：</span>
                     <span class="value">
-                      <span class="total-price">{{order.num*order.discount_price}}</span>元
+                      <span class="total-price">{{total_price}}</span>元
                     </span>
                   </li>
                 </ul>
@@ -152,7 +151,9 @@ export default {
     return {
       orderNum: '', // 订单num,
       order: '',
-      address: ''
+      address: '',
+      total_price: '',
+      user: JSON.parse(localStorage.getItem('user'))
     }
   },
   activated() {
@@ -169,14 +170,14 @@ export default {
   methods: {
     load() {
       ordersAPI
-        .showOrder(this.orderNum)
+        .showOrder(this.orderNum, this.user.id)
         .then(res => {
-          if (res.status === 200) {
+          if (res.msg === '成功') {
             this.order = res.data
-          } else if (res.status === 20001) {
-            //token过期，需要重新登录
-            this.loginExpired(res.msg)
-          } else {
+            this.address = res.address
+            this.orderNum = res.orderid
+            this.total_price = res.total_price
+          }  else {
             this.notifyError('获取订单失败', res.msg)
           }
         })

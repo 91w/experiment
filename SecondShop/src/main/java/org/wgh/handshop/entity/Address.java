@@ -16,10 +16,11 @@ public class Address {
 
     @TableId(type = IdType.AUTO)
     private Integer id;
+
     private Integer userid;
-    private String province;
-    private String city;
-    private String district;
+    private String name;
+    private String address;
+    private String phone;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
     private Date createtime;

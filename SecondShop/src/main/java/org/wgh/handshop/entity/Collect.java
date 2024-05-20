@@ -42,6 +42,6 @@ public class Collect implements Serializable {
     /**
      * 0失效 1正常
      */
-    private Integer collstatus;
+    private Integer status;
 
 }

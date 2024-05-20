@@ -144,7 +144,7 @@ export default {
           userAPI
             .postUser(this.form)
             .then(res => {
-              console.log(res)
+              
               if (res.status === 404) {
                 this.notifyError('验证失败', res.msg)
               } else if (res.data.msg === "成功") {

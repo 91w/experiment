@@ -8,11 +8,10 @@ import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.wgh.handshop.entity.Commimages;
 import org.wgh.handshop.entity.user.UserInfo;
 import org.wgh.handshop.mapper.UserInfoMapper;
+import org.wgh.handshop.util.ImageUtil;
 import org.wgh.handshop.util.JustPhone;
-import org.wgh.handshop.vo.ResultVo;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,10 +44,7 @@ public class LoginService {
                 map.put("msg", "成功");
                 map.put("token", tokenInfo.tokenValue);
                 userInfo.setPassword(" ");
-                Path filePath = Paths.get("src/main/resources/static", userInfo.getUimage());
-                byte[] fileContent = Files.readAllBytes(filePath);
-                String encodedString = Base64.getEncoder().encodeToString(fileContent);
-                userInfo.setUimage(encodedString);
+                userInfo.setUimage(ImageUtil.trimImage(userInfo.getUimage()));
                 map.put("user", userInfo);
                 return map;
             }else {
@@ -69,10 +65,7 @@ public class LoginService {
                 map.put("msg", "成功");
                 map.put("token", tokenInfo.tokenValue);
                 userInfo.setPassword(" ");
-                Path filePath = Paths.get("src/main/resources/static", userInfo.getUimage());
-                byte[] fileContent = Files.readAllBytes(filePath);
-                String encodedString = Base64.getEncoder().encodeToString(fileContent);
-                userInfo.setUimage(encodedString);
+                userInfo.setUimage(ImageUtil.trimImage(userInfo.getUimage()));
                 map.put("user", userInfo);
                 return map;
             }else {

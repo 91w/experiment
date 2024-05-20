@@ -17,14 +17,15 @@ const showProduct = id =>
   axios.get(`/api/product/${id}`).then(res => res.data)
 
 // 读取商品列表
-const listProducts = (category_id, start, limit) =>
+const listProducts = (category, start, limit) =>
   axios
-    .get('/api/v1/products', { params: { category_id, start, limit } })
+    .get('/api/product/get', { params: { category, start, limit } })
     .then(res => res.data)
 
 //读取商品的图片
 const showPictures = id => axios.get(`/api/product/image/${id}`).then(res => res.data)
 
+const showImageList = () => axios.get('/api/test').then(res => res.data)
 //搜索商品
 const searchProducts = form =>
   axios.post('/api/product/search', form).then(res => res.data)
@@ -38,5 +39,6 @@ export {
   listProducts,
   showPictures,
   searchProducts,
-  showRanking
+  showRanking,
+  showImageList
 }
