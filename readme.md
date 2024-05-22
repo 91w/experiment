@@ -4,7 +4,7 @@
 
 所以整个项目**没有任何中间件！！！**，有需要的可以找其他的了。
 
-前端基于的[cmall-vue](https://github.com/congz666/cmall-vue/tree/master)，感谢大佬，小部分的修改了下内容，但毕竟时间在那，**是vue2**，介意也可以下一个了😉
+前端基于的[cmall-vue](https://github.com/congz666/cmall-vue/tree/master)，感谢大佬，小部分的修改了下内容，但毕竟时间在那，**是vue2**，介意也可以下一个了😉，**前端的分页，没弄明白，暂时不能分页**
 
 后端基于SpringBoot3.2.5 + JDK 17
 
