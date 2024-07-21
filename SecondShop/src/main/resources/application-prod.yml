@@ -37,7 +37,7 @@ spring:
 #     文件上传的大小限制
   ai:
     openai:
-      api-key:  sk-iRqNmUpfODMaaYFwE4FdEf891bEf4f07B8B48fD2A497Db57
+      api-key:  
       base-url: https://m.gptapi.us
 #  web:
 #    resources:
